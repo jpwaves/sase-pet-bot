@@ -4,4 +4,8 @@ plans.txt
 # Environment file for all project-wide constants
 .env
 
+# Folder containing all used dependencies
 node_modules
+
+# Folder acting as a proxy for downloading images from Discord and uploading them to S3 bucket
+downloads
