@@ -11,13 +11,13 @@ export const generateFilePath = (path) => {
 }
 
 /**
- * Downloads the image from the url to the destination of the given file path
+ * (Asynchronous) Downloads the image from the url to the destination of the given file path
  * @param {String} url : url to the image
  * @param {String} filename : location to where image should be downloaded to
  * @param {Function} callback : function that should be executed when image is done
  * downloading
  */
-export const download = (url, filename, callback) => {
+export const download = async (url, filename, callback) => {
     request(url, (err, res, body) => {
         // console.log(res.headers);
 
@@ -31,6 +31,6 @@ export const download = (url, filename, callback) => {
 };
 
 // const url = 'https://media.discordapp.net/attachments/834553741805617254/834643370549837845/Icon_-_Pushpop.jpg';
-// download(url, generateFilePath('./downloads/'), () => {
+// await download(url, generateFilePath('./downloads/'), () => {
 //     console.log('success');
 // });
