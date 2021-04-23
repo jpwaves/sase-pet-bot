@@ -1,2 +1,7 @@
 # Ignore text file with plans for the project
 plans.txt
+
+# Environment file for all project-wide constants
+.env
+
+node_modules
