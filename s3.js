@@ -55,7 +55,7 @@ export const s3upload = async (imageFolder, callback) => {
 
 /**
  * Gets an object from the S3 bucket given an valid key
- * @param {*} key : associated key for an object in the S3 bucket
+ * @param {String} key : associated key for an object in the S3 bucket
  * @param {Function} callback : function to be called upon successful completion of get
  */
 export const s3getImage = async (key, callback) => {
