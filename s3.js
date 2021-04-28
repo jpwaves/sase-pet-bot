@@ -1,6 +1,6 @@
 import 'dotenv/config.js';
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { createReadStream, readdirSync } from 'fs';
+import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { createReadStream, readdirSync, createWriteStream } from 'fs';
 
 // constants for S3 client configuration and S3 bucket upload
 const region = process.env.S3_BUCKET_REGION;
@@ -18,7 +18,7 @@ const client = new S3Client({
  * Uploads an image to the S3 bucket designated in the environment variable
  * @param {String} imageFolder : the path to the folder (must end with a backslash)
  */
-export const s3upload = async imageFolder => {
+export const s3upload = async (imageFolder, callback) => {
     // getting files from the given imageFolder path
     const files = readdirSync(imageFolder);
     if (files.length == 0) {
@@ -32,11 +32,12 @@ export const s3upload = async imageFolder => {
     const path = imageFolder + fileName;
     const filestream = createReadStream(path);
 
-    // creating parameters for bucket upload
+    // setting parameters for bucket upload
     const params = {
         Bucket: bucketName,
         Key: fileName,
         Body: filestream,
+        ContentType: 'image/jpeg'
     };
 
     // uploading to S3 bucket
@@ -44,9 +45,40 @@ export const s3upload = async imageFolder => {
     try {
         const data = await client.send(command);
         console.log('put successful');
+        callback();
     } catch (error) {
         console.log(error);
     } finally {
-        console.log('done');
+        console.log('upload done');
     }
 };
+
+/**
+ * Gets an object from the S3 bucket given an valid key
+ * @param {*} key : associated key for an object in the S3 bucket
+ * @param {Function} callback : function to be called upon successful completion of get
+ */
+export const s3getImage = async (key, callback) => {
+    // setting parameters for getting object from S3 bucket
+    const params = {
+        Bucket: bucketName,
+        Key: key,
+    };
+
+    // getting from S3 bucket
+    const command = new GetObjectCommand(params);
+    try {
+        const data = await client.send(command);
+
+        // writing data from returned object to local file
+        data.Body.pipe(createWriteStream(key)).on('close', callback);
+    } catch(error) {
+        console.log(error);
+    } finally {
+        console.log('get image done');
+    }
+};
+
+// s3upload('./downloads/', () => {console.log('x');});
+// const testPath = '1619597379740.jpeg';
+// s3getImage(testPath, () => {console.log('x');});
