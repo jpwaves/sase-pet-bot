@@ -9,14 +9,13 @@ import {
 
 // constants for S3 client configuration and S3 bucket upload
 const region = process.env.S3_BUCKET_REGION;
-const publickey = process.env.dynamodb_access_key_id;
-const secret = process.env.dynamodb_secret_access_key;
+const table = process.env.DYNAMODB_TABLE_NAME;
 
 const client = new DynamoDBClient({ 
     region: region
 });
 
-const table = 'sase-pet-bot-discord-embeds';
+
 
 export const dynamoDBUpload = async (imageName, uploaderId, petName = null, description = null) => {
     const params = {
