@@ -1,6 +1,15 @@
 import 'dotenv/config.js';
-import { DynamoDBClient, PutItemCommand, QueryCommand, GetItemCommand } from "@aws-sdk/client-dynamodb";
-import { createReadStream, readdirSync, createWriteStream } from 'fs';
+import { 
+    DynamoDBClient, 
+    PutItemCommand, 
+    QueryCommand, 
+    GetItemCommand,
+    ScanCommand,
+    UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import { 
+    createReadStream, 
+    readdirSync, 
+    createWriteStream } from 'fs';
 
 // constants for S3 client configuration and S3 bucket upload
 const region = process.env.S3_BUCKET_REGION;
@@ -88,6 +97,7 @@ export const dynamoDBRetrieveItem = async (embedIdKey, uploaderIdKey) => {
         const result = await client.send(command);
         console.log(result.Item);
         console.log('retrieve successful');
+        return result.Item;
     } catch(error) {
         console.log(error);
     } finally {
@@ -95,4 +105,52 @@ export const dynamoDBRetrieveItem = async (embedIdKey, uploaderIdKey) => {
     }
 };
 
-dynamoDBRetrieveItem('1619597379740.jpeg', '193375097254313984');
+const togglePosted = async (embedIdKey, uploaderIdKey) => {
+    const item = dynamoDBRetrieveItem(embedIdKey, uploaderIdKey);
+    const params = {
+        ExpressionAttributeValues: {
+            ':toggledState': { BOOL: !item.alreadyPostedInCycle.BOOL }
+        },
+        Key: {
+            embedId: { S: embedIdKey },
+            uploaderId: { S: uploaderIdKey },
+        },
+        TableName: table,
+        UpdateExpression: 'SET alreadyPostedInCycle = :toggledState'
+    };
+
+    const command = new UpdateItemCommand(params);
+    try { 
+        const data = await client.send(command);
+        console.log(data);
+        console.log('toggle successful');
+    } catch(error) {
+        console.log(error);
+    } finally {
+        console.log('toggle done');
+    }
+}
+
+// dynamoDBRetrieveItem('1619597379740.jpeg', '193375097254313984');
+
+const getAllItems = async () => {
+    const params = {
+        FilterExpression: 'alreadyPostedInCycle = :state',
+        ExpressionAttributeValues: {
+            ':state': { BOOL: true },
+        },
+        ProjectionExpression: 'embedId, uploaderId',
+        TableName: table,
+    }
+
+    const command = new ScanCommand(params);
+    try {
+        const data = await client.send(command);
+        console.log(data.Items);
+        console.log('get all successful');
+    } catch(error) {
+        console(error);
+    } finally {
+        console.log('get all done');
+    }
+}
