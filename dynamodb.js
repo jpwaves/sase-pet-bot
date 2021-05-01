@@ -162,7 +162,7 @@ const dynamoDBGetAll = async () => {
 
 // await getAllItems();
 
-const resetData = async () => {
+export const resetData = async () => {
     try {
         const data = await dynamoDBGetAll();
         data.forEach(async item => {
