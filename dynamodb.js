@@ -137,7 +137,7 @@ const togglePosted = async (embedIdKey, uploaderIdKey) => {
 // await togglePosted('1619597379740.jpeg', '193375097254313984');
 // await dynamoDBRetrieveItem('1619597379740.jpeg', '193375097254313984');
 
-const getAllItems = async () => {
+const dynamoDBGetAll = async () => {
     const params = {
         FilterExpression: 'alreadyPostedInCycle = :state',
         ExpressionAttributeValues: {
@@ -152,9 +152,29 @@ const getAllItems = async () => {
         const data = await client.send(command);
         console.log(data.Items);
         console.log('get all successful');
+        return data.Items;
     } catch(error) {
         console(error);
     } finally {
         console.log('get all done');
     }
 }
+
+// await getAllItems();
+
+const resetData = async () => {
+    try {
+        const data = await dynamoDBGetAll();
+        data.forEach(async item => {
+            console.log(item);
+            await togglePosted(item.embedId.S, item.uploaderId.S);
+        });
+        console.log('number of items reset: ' + data.length);
+    } catch(error) {
+        console.log(error);
+    } finally {
+        console.log('reset done');
+    }
+};
+
+await resetData();
