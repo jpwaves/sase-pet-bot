@@ -105,8 +105,10 @@ export const dynamoDBRetrieveItem = async (embedIdKey, uploaderIdKey) => {
     }
 };
 
+// dynamoDBRetrieveItem('1619597379740.jpeg', '193375097254313984');
+
 const togglePosted = async (embedIdKey, uploaderIdKey) => {
-    const item = dynamoDBRetrieveItem(embedIdKey, uploaderIdKey);
+    const item = await dynamoDBRetrieveItem(embedIdKey, uploaderIdKey);
     const params = {
         ExpressionAttributeValues: {
             ':toggledState': { BOOL: !item.alreadyPostedInCycle.BOOL }
@@ -131,7 +133,9 @@ const togglePosted = async (embedIdKey, uploaderIdKey) => {
     }
 }
 
-// dynamoDBRetrieveItem('1619597379740.jpeg', '193375097254313984');
+// await dynamoDBRetrieveItem('1619597379740.jpeg', '193375097254313984');
+// await togglePosted('1619597379740.jpeg', '193375097254313984');
+// await dynamoDBRetrieveItem('1619597379740.jpeg', '193375097254313984');
 
 const getAllItems = async () => {
     const params = {
