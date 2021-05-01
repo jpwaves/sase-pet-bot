@@ -1,5 +1,5 @@
 import 'dotenv/config.js';
-import { DynamoDBClient, PutItemCommand, QueryCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, PutItemCommand, QueryCommand, GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { createReadStream, readdirSync, createWriteStream } from 'fs';
 
 // constants for S3 client configuration and S3 bucket upload
@@ -13,11 +13,11 @@ const client = new DynamoDBClient({
 
 const table = 'sase-pet-bot-discord-embeds';
 
-export const dynamoDBUpload = async () => {
+export const dynamoDBUpload = async (imageName, uploaderId, petName = null, description = null) => {
     const params = {
         Item: {
-            embedId: { S:'1619597379740.jpeg' },
-            uploaderId: { S:'193375097254313984' },
+            embedId: { S: '1619597379740.jpeg' },
+            uploaderId: { S: '193375097254313984' },
             alreadyPostedInCycle: { BOOL: false },
             petName: { S: 'eevee' },
             description: { S: 'i love you babyyyy ur so cutee' }
@@ -72,3 +72,27 @@ export const dynamoDBQueryUnsentImages = async (embedIdKey) => {
 }
 
 // dynamoDBQueryUnsentImages('1619597379740.jpeg');
+
+export const dynamoDBRetrieveItem = async (embedIdKey, uploaderIdKey) => {
+    const params = {
+        Key: {
+          embedId: { S: embedIdKey },
+          uploaderId: {S: uploaderIdKey }
+        },
+        ProjectionExpression: 'embedId, uploaderId, alreadyPostedInCycle, petName, description',
+        TableName: table
+    };
+
+    const command = new GetItemCommand(params);
+    try {
+        const result = await client.send(command);
+        console.log(result.Item);
+        console.log('retrieve successful');
+    } catch(error) {
+        console.log(error);
+    } finally {
+        console.log('retrieve done');
+    }
+};
+
+dynamoDBRetrieveItem('1619597379740.jpeg', '193375097254313984');
