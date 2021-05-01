@@ -7,7 +7,7 @@ import {
     ScanCommand,
     UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 
-// constants for S3 client configuration and S3 bucket upload
+// constants for DynamoDB client and operations
 const region = process.env.S3_BUCKET_REGION;
 const table = process.env.DYNAMODB_TABLE_NAME;
 
@@ -15,16 +15,21 @@ const client = new DynamoDBClient({
     region: region
 });
 
-
-
-export const dynamoDBUpload = async (imageName, uploaderId, petName = null, description = null) => {
+/**
+ * Uploads data for creating a Discord Embed Message to the DynamoDB
+ * @param {String} key : key associated with an image file in the S3 bucket
+ * @param {String} uploaderId : Discord ID of uploader
+ * @param {String} petName : name of pet (default null)
+ * @param {String} description : message to go with pet image (default null)
+ */
+export const dynamoDBUpload = async (key, uploaderId, petName = null, description = null) => {
     const params = {
         Item: {
-            embedId: { S: '1619597379740.jpeg' },
-            uploaderId: { S: '193375097254313984' },
+            embedId: { S: key },
+            uploaderId: { S: uploaderId },
             alreadyPostedInCycle: { BOOL: false },
-            petName: { S: 'eevee' },
-            description: { S: 'i love you babyyyy ur so cutee' }
+            petName: { S: petName },
+            description: { S: description }
         },
         TableName: table
     };
