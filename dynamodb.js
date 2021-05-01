@@ -1,15 +1,11 @@
 import 'dotenv/config.js';
 import { 
     DynamoDBClient, 
+    GetItemCommand,
     PutItemCommand, 
     QueryCommand, 
-    GetItemCommand,
     ScanCommand,
     UpdateItemCommand } from "@aws-sdk/client-dynamodb";
-import { 
-    createReadStream, 
-    readdirSync, 
-    createWriteStream } from 'fs';
 
 // constants for S3 client configuration and S3 bucket upload
 const region = process.env.S3_BUCKET_REGION;
