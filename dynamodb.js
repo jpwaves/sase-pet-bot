@@ -50,12 +50,19 @@ export const dynamoDBUpload = async (key, uploaderId, petName = null, descriptio
 
 //dynamoDBUpload();
 
-export const dynamoDBQueryUnsentImages = async (embedIdKey) => {
+/**
+ * Queries all the items in the DynamoDB whose alreadyPostedInCycle attribute is false
+ * @param {String} embedIdKey Target embedId of an item in the DynamoDB
+ * @param {String} uploaderIdKey Target uploaderId of an item in the DynamoDB
+ * @returns Array of all items that have not been sent yet in the current upload cycle
+ */
+export const dynamoDBQueryUnsentImages = async (embedIdKey, uploaderIdKey) => {
     const params = {
-        KeyConditionExpression: 'embedId = :ei',
+        KeyConditionExpression: 'embedId = :ei and uploaderId = :ui',
         FilterExpression: 'alreadyPostedInCycle = :posted',
         ExpressionAttributeValues: {
           ':ei': { S: embedIdKey },
+          ':ui': { S: uploaderIdKey },
           ':posted': { BOOL: false },
         },
         ProjectionExpression: 'embedId, uploaderId, alreadyPostedInCycle, petName, description',
