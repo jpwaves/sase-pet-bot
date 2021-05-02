@@ -89,6 +89,12 @@ export const dynamoDBQueryUnsentImages = async (embedIdKey, uploaderIdKey) => {
 
 // dynamoDBQueryUnsentImages('1619597379740.jpeg');
 
+/**
+ * Retrieves the item with matching embedId's and uploaderId's as the input
+ * @param {String} embedIdKey Target embedId to get from DynamoDB
+ * @param {String} uploaderIdKey Target uploaderId to get from DynamoDB
+ * @returns The item with the given embedId and uploaderId
+ */
 export const dynamoDBRetrieveItem = async (embedIdKey, uploaderIdKey) => {
     const params = {
         Key: {
@@ -114,6 +120,11 @@ export const dynamoDBRetrieveItem = async (embedIdKey, uploaderIdKey) => {
 
 // dynamoDBRetrieveItem('1619597379740.jpeg', '193375097254313984');
 
+/**
+ * Toggles the status of whether the particular item with the given embedId and uploaderId has been posted already or not
+ * @param {String} embedIdKey Target embedId
+ * @param {String} uploaderIdKey Target uploaderId
+ */
 const togglePosted = async (embedIdKey, uploaderIdKey) => {
     const item = await dynamoDBRetrieveItem(embedIdKey, uploaderIdKey);
     const params = {
@@ -144,6 +155,10 @@ const togglePosted = async (embedIdKey, uploaderIdKey) => {
 // await togglePosted('1619597379740.jpeg', '193375097254313984');
 // await dynamoDBRetrieveItem('1619597379740.jpeg', '193375097254313984');
 
+/**
+ * Gets all the items that have been posted already in the Discord text channel
+ * @returns Array of all the data in DynamoDB that have been posted already
+ */
 const dynamoDBGetAll = async () => {
     const params = {
         FilterExpression: 'alreadyPostedInCycle = :state',
@@ -169,6 +184,9 @@ const dynamoDBGetAll = async () => {
 
 // await getAllItems();
 
+/**
+ * Modifies all the data in DynamoDB so the alreadyPostedInCycle attribute is false
+ */
 export const resetData = async () => {
     try {
         const data = await dynamoDBGetAll();
