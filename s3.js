@@ -23,6 +23,7 @@ const client = new S3Client({
 /**
  * Uploads an image to the S3 bucket designated in the environment variable
  * @param {String} imageFolder The path to the folder (must end with a backslash)
+ * @returns The key of the image that was uploaded to the S3 bucket
  */
 export const s3upload = async (imageFolder, callback) => {
     // getting files from the given imageFolder path
@@ -52,6 +53,7 @@ export const s3upload = async (imageFolder, callback) => {
         const data = await client.send(command);
         console.log('put successful');
         callback();
+        return fileName;
     } catch (error) {
         console.log(error);
     } finally {
