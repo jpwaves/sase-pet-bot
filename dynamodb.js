@@ -19,10 +19,10 @@ const client = new DynamoDBClient({
  * Uploads data for creating a Discord Embed Message to the DynamoDB
  * @param {String} key Key associated with an image file in the S3 bucket
  * @param {String} uploaderId Discord ID of uploader
- * @param {String} petName Name of pet (default null)
- * @param {String} description Message to go with pet image (default null)
+ * @param {String} petName Name of pet
+ * @param {String} description Message to go with pet image
  */
-export const dynamoDBUpload = async (key, uploaderId, petName = null, description = null) => {
+export const dynamoDBUpload = async (key, uploaderId, petName, description) => {
     const params = {
         Item: {
             embedId: { S: key },
