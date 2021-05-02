@@ -1,6 +1,12 @@
 import 'dotenv/config.js';
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
-import { createReadStream, readdirSync, createWriteStream } from 'fs';
+import { 
+    S3Client, 
+    PutObjectCommand, 
+    GetObjectCommand } from "@aws-sdk/client-s3";
+import { 
+    createReadStream, 
+    readdirSync, 
+    createWriteStream } from 'fs';
 
 // constants for S3 client configuration and S3 bucket upload
 const region = process.env.S3_BUCKET_REGION;
@@ -16,7 +22,7 @@ const client = new S3Client({
 
 /**
  * Uploads an image to the S3 bucket designated in the environment variable
- * @param {String} imageFolder : the path to the folder (must end with a backslash)
+ * @param {String} imageFolder The path to the folder (must end with a backslash)
  */
 export const s3upload = async (imageFolder, callback) => {
     // getting files from the given imageFolder path
@@ -55,8 +61,8 @@ export const s3upload = async (imageFolder, callback) => {
 
 /**
  * Gets an object from the S3 bucket given an valid key
- * @param {String} key : associated key for an object in the S3 bucket
- * @param {Function} callback : function to be called upon successful completion of get
+ * @param {String} key Associated key for an object in the S3 bucket
+ * @param {Function} callback Function to be called upon successful completion of get
  */
 export const s3getImage = async (key, callback) => {
     // setting parameters for getting object from S3 bucket
