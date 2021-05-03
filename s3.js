@@ -78,8 +78,8 @@ export const s3getImage = async (key, callback) => {
     try {
         const data = await client.send(command);
 
-        // writing data from returned object to local file
-        data.Body.pipe(createWriteStream(key)).on('close', callback);
+        // returns a readable stream containing the image data
+        return data.Body;
     } catch(error) {
         console.log(error);
     } finally {
