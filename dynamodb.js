@@ -159,7 +159,7 @@ const togglePosted = async (embedIdKey, uploaderIdKey) => {
  * Gets all the items that have been posted already in the Discord text channel
  * @returns Array of all the data in DynamoDB that have been posted already
  */
-const dynamoDBGetAll = async () => {
+const dynamoDBGetAllSent = async () => {
     const params = {
         FilterExpression: 'alreadyPostedInCycle = :state',
         ExpressionAttributeValues: {
@@ -173,12 +173,12 @@ const dynamoDBGetAll = async () => {
     try {
         const data = await client.send(command);
         console.log(data.Items);
-        console.log('get all successful');
+        console.log('get all sent successful');
         return data.Items;
     } catch(error) {
         console(error);
     } finally {
-        console.log('get all done');
+        console.log('get all sent done');
     }
 }
 
@@ -189,7 +189,7 @@ const dynamoDBGetAll = async () => {
  */
 export const resetData = async () => {
     try {
-        const data = await dynamoDBGetAll();
+        const data = await dynamoDBGetAllSent();
         data.forEach(async item => {
             console.log(item);
             await togglePosted(item.embedId.S, item.uploaderId.S);
@@ -202,4 +202,33 @@ export const resetData = async () => {
     }
 };
 
-await resetData();
+// await resetData();
+
+/**
+ * Gets all the items that haven't been posted yet in the current posting cycle
+ * @returns Array of all items that are marked as not having been posted yet in the current cycle
+ */
+const dynamoDBGetAllUnsent = async () => {
+    const params = {
+        FilterExpression: 'alreadyPostedInCycle = :state',
+        ExpressionAttributeValues: {
+            ':state': { BOOL: false },
+        },
+        ProjectionExpression: 'embedId, uploaderId',
+        TableName: table,
+    }
+
+    const command = new ScanCommand(params);
+    try {
+        const data = await client.send(command);
+        console.log(data.Items);
+        console.log('get all unsent successful');
+        return data.Items;
+    } catch(error) {
+        console(error);
+    } finally {
+        console.log('get all unsent done');
+    }
+}
+
+await dynamoDBGetAllUnsent();
