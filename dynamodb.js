@@ -208,7 +208,7 @@ export const resetData = async () => {
  * Gets all the items that haven't been posted yet in the current posting cycle
  * @returns Array of all items that are marked as not having been posted yet in the current cycle
  */
-const dynamoDBGetAllUnsent = async () => {
+export const dynamoDBGetAllUnsent = async () => {
     const params = {
         FilterExpression: 'alreadyPostedInCycle = :state',
         ExpressionAttributeValues: {
@@ -231,4 +231,4 @@ const dynamoDBGetAllUnsent = async () => {
     }
 }
 
-await dynamoDBGetAllUnsent();
+// await dynamoDBGetAllUnsent();
