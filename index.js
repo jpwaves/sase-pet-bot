@@ -15,48 +15,45 @@ import {
     resetData,
     dynamoDBGetAllUnsent, 
     togglePosted } from './dynamodb.js';
-//const schedule = require('node-schedule');
-import { scheduleJob } from 'node-schedule';
+import { RecurrenceRule, scheduleJob } from 'node-schedule';
+
 const client = new Discord.Client();
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
-    // const rule = new schedule.RecurrenceRule();
-	// rule.hour = 10;
-	// rule.minute = 0;
+    // 
+    const rule = new RecurrenceRule();
+	rule.hour = 10;
+	rule.minute = 0;
 
-    const rule = '*/30 * * * * *';
+    // const rule = '*/30 * * * * *';
 
+    // scheduled posting
 	scheduleJob(rule, () => {
 		console.log('Ran postDailyPetEmbedMessage on scheduled time at ' + new Date() + '\n');
 		postDailyPetEmbedMessage();
 	});
 });
 
-// client.on('message', async message => {
-//     if (message.content.startsWith('!t') && inPetChannelServer) {
-//         const filestream = createReadStream('./1619597379740.jpeg');
-//         const newEmbedReply = new Discord.MessageEmbed()
-//             .setTitle("title")
-//             .attachFiles(filestream)
-//             .setImage('attachment://1619597379740.jpeg');
-//         message.author.send(newEmbedReply);
-//     }
-// });
-
 // redirecting user to private message !upload to begin upload process
-// const inPetChannelServer = true;
-// client.on('message', async message => {
-//     if (message.content.startsWith('!upload') && inPetChannelServer) {
-//         const msg = 'To upload a new pet image, private message this bot !upload to start the upload process. When uploading an image file, if you want to include the pet name, and a message to go with the photo do the following formatting:';
-//         message.author.send(msg);
-//     }
-// });
+const inPetChannelServer = true;
+client.on('message', async message => {
+    if (message.content.startsWith('!upload') && message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
+        const msg = 'To upload a new pet image, private message this bot !upload to start the upload process. When uploading an image file, if you want to include the pet name, and a message to go with the photo do the following formatting:';
+        message.author.send(msg);
+    }
+});
 
 // upload process
 client.on('message', async message => {
     try {
+        console.log(message.channel);
+        // if (message.content.startsWith('!upload') && message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
+        //     console.log('Cannot upload in public text channel');
+        //     const msg = 'To upload a new pet image, private message this bot !upload to start the upload process. When uploading an image file, if you want to include the pet name, and a message to go with the photo do the following formatting:';
+        //     message.author.send(msg);
+        // }
         if (message.content.startsWith('!upload')) {
             if (message.attachments.size != 1) {
                 message.author.send('Missing image file/can only upload 1 image per upload operation');
