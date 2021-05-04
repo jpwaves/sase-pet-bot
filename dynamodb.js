@@ -50,6 +50,7 @@ export const dynamoDBUpload = async (key, uploaderId, petName, description) => {
 
 //dynamoDBUpload();
 
+// NOTE: this method is currently unused
 /**
  * Queries all the items in the DynamoDB whose alreadyPostedInCycle attribute is false
  * @param {String} embedIdKey Target embedId of an item in the DynamoDB
