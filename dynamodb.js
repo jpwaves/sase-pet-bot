@@ -125,7 +125,7 @@ export const dynamoDBRetrieveItem = async (embedIdKey, uploaderIdKey) => {
  * @param {String} embedIdKey Target embedId
  * @param {String} uploaderIdKey Target uploaderId
  */
-const togglePosted = async (embedIdKey, uploaderIdKey) => {
+export const togglePosted = async (embedIdKey, uploaderIdKey) => {
     const item = await dynamoDBRetrieveItem(embedIdKey, uploaderIdKey);
     const params = {
         ExpressionAttributeValues: {
