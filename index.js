@@ -1,4 +1,3 @@
-// Importing modules
 import 'dotenv/config.js';
 import Discord, { MessageAttachment, MessageEmbed } from 'discord.js';
 import { 
@@ -15,18 +14,23 @@ import {
     resetData,
     dynamoDBGetAllUnsent, 
     togglePosted } from './dynamodb.js';
-import { RecurrenceRule, scheduleJob } from 'node-schedule';
+import { 
+    RecurrenceRule, 
+    scheduleJob } from 'node-schedule';
 
+// construct Discord client for bot
 const client = new Discord.Client();
 
+// Upon startup, begin scheduled job for posting images
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
-    // 
+    // standard rule for scheduled job
     const rule = new RecurrenceRule();
 	rule.hour = 10;
 	rule.minute = 0;
 
+    // rule for testing scheduled job
     // const rule = '*/30 * * * * *';
 
     // scheduled posting
@@ -36,7 +40,9 @@ client.on('ready', () => {
 	});
 });
 
-// upload process
+/**
+ * Handles event where users try to upload an image that bot can post later on.
+ */
 client.on('message', async message => {
     try {
         if (message.content.startsWith('!upload') && message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
@@ -60,8 +66,6 @@ client.on('message', async message => {
                 const petName = args[0];
                 const desc = args[1];
 
-                // TODO: download, s3upload not going asynchronously
-                // possible solution: convert using await into a series of promises (need to review how data gets passed down via then)
                 try {
                     // TODO: convert download to return a read stream that can be piped directly into s3upload
                     // see https://stackoverflow.com/questions/14544911/fs-createreadstream-equivalent-for-remote-file-in-node
@@ -106,7 +110,10 @@ client.on('message', async message => {
     }
 });
 
-// posts random image
+/**
+ * Gets data for a random, not-yet-posted Discord embed, creates the embed and posts it
+ * in the target text channel.
+ */
 const postDailyPetEmbedMessage = async () => {
     // gets all items that haven't been sent yet in this posting cycle
     const data = await dynamoDBGetAllUnsent();
@@ -145,11 +152,5 @@ const postDailyPetEmbedMessage = async () => {
     client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ files: [imageFile], embed: msgEmbed });
 }
 
-client.on('message', async message => {
-    if (message.content.startsWith('!test')) {
-        await postDailyPetEmbedMessage();
-    }
-});
-
-console.log(process.env.DISCORD_BOT_TOKEN);
+// Logs in bot
 client.login(process.env.DISCORD_BOT_TOKEN);
