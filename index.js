@@ -1,25 +1,26 @@
 import 'dotenv/config.js';
-import Discord, { MessageAttachment, MessageEmbed } from 'discord.js';
 import { 
+    Client,
+    MessageAttachment } from 'discord.js';
+import { 
+    clearDownloadFolder, 
     download, 
-    generateFilePath, 
-    clearDownloadFolder } from './image-download.js';
+    generateFilePath } from './image-download.js';
 import { 
-    s3upload,
-    s3getImage } from './s3.js';
+    s3getImage,
+    s3upload } from './s3.js';
 import { 
+    dynamoDBGetAllUnsent,
+    dynamoDBRetrieveItem,
     dynamoDBUpload, 
-    dynamoDBQueryUnsentImages, 
-    dynamoDBRetrieveItem, 
     resetData,
-    dynamoDBGetAllUnsent, 
     togglePosted } from './dynamodb.js';
 import { 
     RecurrenceRule, 
     scheduleJob } from 'node-schedule';
 
 // construct Discord client for bot
-const client = new Discord.Client();
+const client = new Client();
 
 // Upon startup, begin scheduled job for posting images
 client.on('ready', () => {
@@ -140,7 +141,7 @@ const postDailyPetEmbedMessage = async () => {
 
     // creating Discord message embed and posting it to channel
     const imageLink = `attachment://${embedData.embedId.S}`;
-    const imageFile = new Discord.MessageAttachment(filestream, embedData.embedId.S);
+    const imageFile = new MessageAttachment(filestream, embedData.embedId.S);
     const msgEmbed = {
         title: embedData.petName.S,
         image: {
