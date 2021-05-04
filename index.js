@@ -36,25 +36,15 @@ client.on('ready', () => {
 	});
 });
 
-// redirecting user to private message !upload to begin upload process
-const inPetChannelServer = true;
-client.on('message', async message => {
-    if (message.content.startsWith('!upload') && message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
-        const msg = 'To upload a new pet image, private message this bot !upload to start the upload process. When uploading an image file, if you want to include the pet name, and a message to go with the photo do the following formatting:';
-        message.author.send(msg);
-    }
-});
-
 // upload process
 client.on('message', async message => {
     try {
-        console.log(message.channel);
-        // if (message.content.startsWith('!upload') && message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
-        //     console.log('Cannot upload in public text channel');
-        //     const msg = 'To upload a new pet image, private message this bot !upload to start the upload process. When uploading an image file, if you want to include the pet name, and a message to go with the photo do the following formatting:';
-        //     message.author.send(msg);
-        // }
-        if (message.content.startsWith('!upload')) {
+        if (message.content.startsWith('!upload') && message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
+            // redirecting user to private message !upload to begin upload process
+            console.log('Cannot upload in public text channel');
+            const msg = 'To upload a new pet image, private message this bot !upload to start the upload process. When uploading an image file, if you want to include the pet name, and a message to go with the photo do the following formatting:';
+            message.author.send(msg);
+        } else if (message.content.startsWith('!upload') && message.channel.type == 'dm') {
             if (message.attachments.size != 1) {
                 message.author.send('Missing image file/can only upload 1 image per upload operation');
             } else {
