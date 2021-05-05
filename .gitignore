@@ -13,3 +13,6 @@ downloads
 # Files related to hosting Discord on AWS EC2 Instance
 sase-pet-bot.pem
 sase-pet-bot.ppk
+
+# Folder for src files transpiled from ES6+ to ES5
+lib
