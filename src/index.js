@@ -48,8 +48,9 @@ client.on('ready', () => {
 	// rule.hour = 10;
 	// rule.minute = 0;
 
-    // rule for testing scheduled job
-    const rule = '*/30 * * * * *';
+    // rules for testing scheduled job
+    // const rule = '*/30 * * * * *';
+    const rule = '* * */1 * * *';
 
     // scheduled posting
 	scheduleJob(rule, () => {
@@ -102,18 +103,16 @@ client.on('message', async message => {
             const msg = 'To upload a new pet image, private message this bot !upload to start the upload process. When uploading an image file, you must include parameters for the pet name and a message description in the following format:\n !upload [pet name] | [description]\n If you don\'t want to include pet name or a message as part of the upload, put "N/A" in for the parameter you don\'t want to include. For examples, use the !help command.';
             message.author.send(msg);
         } else if (message.content.startsWith('!upload') && message.channel.type == 'dm') {
-            if (message.attachments.size != 1) {
+            if (message.attachments.size !== 1) {
                 message.author.send('Missing image file/can only upload 1 image per upload operation');
             } else {
                 const iter = message.attachments.values();
                 const messageFile = iter.next().value;
     
                 const content = message.content.slice(7, message.content.length);
-                const args = content.split('|').map(arg => {
-                    return arg.trim();
-                });
+                const args = content.split('|').map(arg => arg.trim()).filter(arg => arg !== '');
                 console.log(args);
-                if (args.length != 2) {
+                if (args.length !== 2) {
                     message.author.send('Missing either pet name or description input parameters. If you don\'t want to include a pet name or description, set the input parameter to "N/A". For examples, use the !help command.');
                 } else {
                     const petName = args[0];
@@ -186,7 +185,7 @@ const postDailyPetEmbedMessage = async () => {
     });
     
     // cycle resetting
-    if (data.length == 1) {
+    if (data.length <= 1) {
         await resetData();
     }
     await togglePosted(embedData.embedId.S, embedData.uploaderId.S);
