@@ -22,6 +22,23 @@ import {
 // construct Discord client for bot
 const client = new Client();
 
+/**
+ * Effect: Modifies given Discord message embed object by adding the optional parameters, if any
+ * @param {Object} embedData Returned object of an item from a DynamoDB GetItemCommand call
+ * @param {Object} discordEmbed Object containing parameters for creating a Discord message embed
+ */
+const addOptionalParams = (embedData, discordEmbed) => {
+    // sets title of embed to pet name if a pet name is given in the returned data
+    if (embedData.petName.S != 'N/A') {
+        discordEmbed.title = embedData.petName.S;
+    }
+
+    // sets description of embed to description if a description is given in the returned data
+    if (embedData.description.S != 'N/A') {
+        discordEmbed.description = embedData.description.S;
+    }
+};
+
 // Upon startup, begin scheduled job for posting images
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -65,7 +82,7 @@ client.on('message', async message => {
                 });
                 console.log(args);
                 if (args.length != 2) {
-                    message.author.send('Missing either pet name or description input parameters. If you don\'t want to include a pet name or description, set the input parameter to "N/A"');
+                    message.author.send('Missing either pet name or description input parameters. If you don\'t want to include a pet name or description, set the input parameter to "N/A". For an example, type !sample in the pet channel');
                 } else {
                     const petName = args[0];
                     const desc = args[1];
@@ -153,7 +170,7 @@ const postDailyPetEmbedMessage = async () => {
         author: embedData.uploaderId.S,
         description: embedData.description.S
     };
-    //message.author.send({ files: [imageFile], embed: msgEmbed });
+    addOptionalParams(embedData, msgEmbed);
     client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ files: [imageFile], embed: msgEmbed });
 }
 
