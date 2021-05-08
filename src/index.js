@@ -39,9 +39,22 @@ const addOptionalParams = (embedData, discordEmbed) => {
     }
 };
 
+/**
+ * Resets data if the bot ends execution in a state where all data has been posted. Ensures bot can find a embed to post before being run.
+ */
+const prevalidateData = async () => {
+    const data = await dynamoDBGetAllUnsent();
+    if (data.length === 0) {
+        await resetData();
+    }
+} 
+
 // Upon startup, begin scheduled job for posting images
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
+
+    // Makes sure that postDailyPetEmbedMessage can find an Discord embed to post
+    prevalidateData();
 
     // standard rule for scheduled job
     // const rule = new RecurrenceRule();
@@ -50,7 +63,7 @@ client.on('ready', () => {
 
     // rules for testing scheduled job
     // const rule = '*/30 * * * * *';
-    const rule = '* * */1 * * *';
+    const rule = '0 * */1 * * *';
 
     // scheduled posting
 	scheduleJob(rule, () => {
@@ -168,41 +181,46 @@ client.on('message', async message => {
  * in the target text channel.
  */
 const postDailyPetEmbedMessage = async () => {
-    // gets all items that haven't been sent yet in this posting cycle
-    const data = await dynamoDBGetAllUnsent();
+    try {
+        // gets all items that haven't been sent yet in this posting cycle
+        const data = await dynamoDBGetAllUnsent();
 
-    // gets random item from data
-    const randIdx = Math.floor(Math.random() * data.length);
-    const randItem = data[randIdx];
-    
-    // gets embed data from random item
-    const embedData = await dynamoDBRetrieveItem(randItem.embedId.S, randItem.uploaderId.S);
-    // console.log(embedData);
+        // gets random item from data
+        const randIdx = Math.floor(Math.random() * data.length);
+        const randItem = data[randIdx];
+        
+        // gets embed data from random item
+        const embedData = await dynamoDBRetrieveItem(randItem.embedId.S, randItem.uploaderId.S);
+        // console.log(embedData);
 
-    // gets image associated with embedData
-    const filestream = await s3getImage(embedData.embedId.S, () => {
-        console.log('get image complete');
-    });
-    
-    // cycle resetting
-    if (data.length <= 1) {
-        await resetData();
+        // gets image associated with embedData
+        const filestream = await s3getImage(embedData.embedId.S, () => {
+            console.log('get image complete');
+        });
+        
+        // cycle resetting
+        if (data.length <= 1) {
+            await resetData();
+        }
+        await togglePosted(embedData.embedId.S, embedData.uploaderId.S);
+
+        // creating Discord message embed and posting it to channel
+        const imageLink = `attachment://${embedData.embedId.S}`;
+        const imageFile = new MessageAttachment(filestream, embedData.embedId.S);
+        const msgEmbed = {
+            title: embedData.petName.S,
+            image: {
+                url: imageLink,
+            },
+            author: embedData.uploaderId.S,
+            description: embedData.description.S
+        };
+        addOptionalParams(embedData, msgEmbed);
+        client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ files: [imageFile], embed: msgEmbed });
+    } catch(error) {
+        console.log('Errored during posting');
+        console.log(error);
     }
-    await togglePosted(embedData.embedId.S, embedData.uploaderId.S);
-
-    // creating Discord message embed and posting it to channel
-    const imageLink = `attachment://${embedData.embedId.S}`;
-    const imageFile = new MessageAttachment(filestream, embedData.embedId.S);
-    const msgEmbed = {
-        title: embedData.petName.S,
-        image: {
-            url: imageLink,
-        },
-        author: embedData.uploaderId.S,
-        description: embedData.description.S
-    };
-    addOptionalParams(embedData, msgEmbed);
-    client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ files: [imageFile], embed: msgEmbed });
 }
 
 // Logs in bot
