@@ -16,3 +16,6 @@ sase-pet-bot.ppk
 
 # Folder for src files transpiled from ES6+ to ES5
 lib
+
+# Babel config file
+.babelrc
