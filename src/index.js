@@ -59,6 +59,38 @@ client.on('ready', () => {
 });
 
 /**
+ * Provides sample examples of how to use the !upload command
+ */
+client.on('message', async message => {
+    if (message.content.trim() == '!help') {
+        const msgEmbed = {
+            title: 'Sample uses of !upload',
+            fields: [
+                {
+                    name: 'Includes a given pet name and message',
+                    value: '!upload Marshmellow | My little wittle cutie pie <3'
+                },
+                {
+                    name: 'Only pet name',
+                    value: '!upload Marshmellow | N/A'
+                },
+                {
+                    name: 'Only message',
+                    value: '!upload N/A | My little wittle cutie pie <3'
+                }
+            ]
+        }
+
+        // determines where to send response to !sample command
+        if (message.channel.type == 'dm') {
+            message.author.send({ embed: msgEmbed });
+        } else {
+            client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ embed: msgEmbed });
+        }
+    }
+});
+
+/**
  * Handles event where users try to upload an image that bot can post later on.
  */
 client.on('message', async message => {
@@ -67,7 +99,7 @@ client.on('message', async message => {
             // redirecting user to private message !upload to begin upload process
             console.log('Cannot upload in public text channel');
             message.delete({ reason: 'Cannot upload in public text channel' });
-            const msg = 'To upload a new pet image, private message this bot !upload to start the upload process. When uploading an image file, if you want to include the pet name, and a message to go with the photo do the following formatting:';
+            const msg = 'To upload a new pet image, private message this bot !upload to start the upload process. When uploading an image file, you must include parameters for the pet name and a message description in the following format:\n !upload [pet name] | [description]\n If you don\'t want to include pet name or a message as part of the upload, put "N/A" in for the parameter you don\'t want to include. For examples, use the !help command.';
             message.author.send(msg);
         } else if (message.content.startsWith('!upload') && message.channel.type == 'dm') {
             if (message.attachments.size != 1) {
@@ -82,7 +114,7 @@ client.on('message', async message => {
                 });
                 console.log(args);
                 if (args.length != 2) {
-                    message.author.send('Missing either pet name or description input parameters. If you don\'t want to include a pet name or description, set the input parameter to "N/A". For an example, type !sample in the pet channel');
+                    message.author.send('Missing either pet name or description input parameters. If you don\'t want to include a pet name or description, set the input parameter to "N/A". For examples, use the !help command.');
                 } else {
                     const petName = args[0];
                     const desc = args[1];
