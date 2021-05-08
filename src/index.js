@@ -64,47 +64,50 @@ client.on('message', async message => {
                     return arg.trim();
                 });
                 console.log(args);
-                
-                const petName = args[0];
-                const desc = args[1];
+                if (args.length != 2) {
+                    message.author.send('Missing either pet name or description input parameters. If you don\'t want to include a pet name or description, set the input parameter to "N/A"');
+                } else {
+                    const petName = args[0];
+                    const desc = args[1];
 
-                try {
-                    // TODO: convert download to return a read stream that can be piped directly into s3upload
-                    // see https://stackoverflow.com/questions/14544911/fs-createreadstream-equivalent-for-remote-file-in-node
-                    // for a possible starting point on how to do this
-                    console.log('starting download');
-                    download(messageFile.url, generateFilePath('./downloads/'), async () => {
-                        console.log('download complete');
+                    try {
+                        // TODO: convert download to return a read stream that can be piped directly into s3upload
+                        // see https://stackoverflow.com/questions/14544911/fs-createreadstream-equivalent-for-remote-file-in-node
+                        // for a possible starting point on how to do this
+                        console.log('starting download');
+                        download(messageFile.url, generateFilePath('./downloads/'), async () => {
+                            console.log('download complete');
 
-                        console.log('starting s3 upload');
-                        const key = await s3upload('./downloads/', () => {
-                            console.log('upload to s3 bucket complete');
+                            console.log('starting s3 upload');
+                            const key = await s3upload('./downloads/', () => {
+                                console.log('upload to s3 bucket complete');
+                            });
+        
+                            console.log('starting dynamodb upload');
+                            dynamoDBUpload(key, message.author.id, petName, desc)
+                            .then(() => {
+                                console.log('upload to dynamodb complete');
+                            })
+                            .then(async () => {
+                                console.log('starting image removal to clean downloads folder');
+                                await clearDownloadFolder(key);
+                                console.log('clean up complete');
+                            })
+                            .then(async () => {
+                                await message.author.send('Upload Complete!');
+                                console.log('upload process complete');
+                            })
+                            .catch(error => {
+                                console.log('Error occurred during dynamodb upload process');
+                                console.log(error);
+                            });
                         });
-    
-                        console.log('starting dynamodb upload');
-                        dynamoDBUpload(key, message.author.id, petName, desc)
-                        .then(() => {
-                            console.log('upload to dynamodb complete');
-                        })
-                        .then(async () => {
-                            console.log('starting image removal to clean downloads folder');
-                            await clearDownloadFolder(key);
-                            console.log('clean up complete');
-                        })
-                        .then(async () => {
-                            await message.author.send('Upload Complete!');
-                            console.log('upload process complete');
-                        })
-                        .catch(error => {
-                            console.log('Error occurred during dynamodb upload process');
-                            console.log(error);
-                        });
-                    });
-
-                } catch(error) {
-                    console.log(error);
-                    message.author.send('Upload failed. Check logs for more details.');
+                    } catch(error) {
+                        console.log(error);
+                        message.author.send('Upload failed. Check logs for more details.');
+                    }
                 }
+                
             }
         }
     } catch(error) {
