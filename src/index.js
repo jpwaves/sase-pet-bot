@@ -62,8 +62,8 @@ client.on('ready', () => {
 	// rule.minute = 0;
 
     // rules for testing scheduled job
-    // const rule = '*/30 * * * * *';
-    const rule = '0 * */1 * * *';
+    const rule = new RecurrenceRule();
+    rule.minute = 0;
 
     // scheduled posting
 	scheduleJob(rule, () => {
@@ -76,7 +76,7 @@ client.on('ready', () => {
  * Provides sample examples of how to use the !upload command
  */
 client.on('message', async message => {
-    if (message.content.trim() == '!help') {
+    if (message.content.trim() === '!help') {
         const msgEmbed = {
             title: 'Sample uses of !upload',
             fields: [
@@ -101,6 +101,15 @@ client.on('message', async message => {
         } else {
             client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ embed: msgEmbed });
         }
+    }
+});
+
+/**
+ * Takes in any issues or suggestions for the bot
+ */
+client.on('message', async message => {
+    if (message.content.startsWith('!report')) {
+        client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send('Please DM me (Justin Poggers/waves#4196) about any issues, bugs, or suggestions regarding the Pet Bot.');
     }
 });
 
