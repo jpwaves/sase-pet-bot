@@ -208,12 +208,10 @@ const postDailyPetEmbedMessage = async () => {
         const imageLink = `attachment://${embedData.embedId.S}`;
         const imageFile = new MessageAttachment(filestream, embedData.embedId.S);
         const msgEmbed = {
-            title: embedData.petName.S,
             image: {
                 url: imageLink,
             },
-            author: embedData.uploaderId.S,
-            description: embedData.description.S
+            author: embedData.uploaderId.S
         };
         addOptionalParams(embedData, msgEmbed);
         client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ files: [imageFile], embed: msgEmbed });
