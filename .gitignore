@@ -19,3 +19,6 @@ lib
 
 # Babel config file
 .babelrc
+
+# File for testing successful compile of index.js in the WinSCP terminal
+src/index-test-compile.js
