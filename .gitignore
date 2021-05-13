@@ -11,8 +11,8 @@ node_modules
 downloads
 
 # Files related to hosting Discord on AWS EC2 Instance
-sase-pet-bot.pem
-sase-pet-bot.ppk
+sasepetbot.pem
+sasepetbot.ppk
 
 # Folder for src files transpiled from ES6+ to ES5
 lib
