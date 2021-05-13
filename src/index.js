@@ -57,13 +57,14 @@ client.on('ready', () => {
     prevalidateData();
 
     // standard rule for scheduled job
-    // const rule = new RecurrenceRule();
-	// rule.hour = 10;
-	// rule.minute = 0;
+    const rule = new RecurrenceRule();
+    rule.tz = 'America/New_York';
+	rule.hour = 7;
+	rule.minute = 0;
 
     // rules for testing scheduled job
-    const rule = new RecurrenceRule();
-    rule.minute = 0;
+    // const rule = new RecurrenceRule();
+    // rule.second = 0;
 
     // scheduled posting
 	scheduleJob(rule, () => {
