@@ -1,0 +1,30 @@
+{
+  "name": "sase-pet-bot",
+  "version": "1.0.0",
+  "description": "College is a stressful. At 7AM every day, get your daily dose of serotonin when this bot posts a photo of a SASE member's pet and feel slightly better about your day. Who doesn't love pets?",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "build": "babel src -d lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Justin Pong",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.14.0",
+    "@aws-sdk/client-s3": "^3.14.0",
+    "@babel/runtime": "^7.14.0",
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.2.0",
+    "node-schedule": "^2.0.0",
+    "nodemon": "^2.0.7",
+    "request": "^2.88.2"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@babel/cli": "^7.13.16",
+    "@babel/core": "^7.14.0",
+    "@babel/plugin-transform-runtime": "^7.13.15",
+    "@babel/preset-env": "^7.14.1"
+  }
+}
