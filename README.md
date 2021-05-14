@@ -66,6 +66,7 @@ To-do list:
 * Improve visuals of the Discord embed messages posted (for both the daily pet photo post as well as what is displayed from all the commands).
 * Improve the !help command to also explain all the other possible commands this bot responds to.
 * Add status referring to !help command
+* Add !github command to link to the bot's Github repo
 
 ## Status
 
