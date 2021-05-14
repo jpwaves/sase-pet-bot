@@ -65,6 +65,7 @@ To-do list:
 * Look into possibility of rewriting the code with an object-oriented style.
 * Improve visuals of the Discord embed messages posted (for both the daily pet photo post as well as what is displayed from all the commands).
 * Improve the !help command to also explain all the other possible commands this bot responds to.
+* Add status referring to !help command
 
 ## Status
 
