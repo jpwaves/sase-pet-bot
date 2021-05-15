@@ -67,6 +67,7 @@ To-do list:
 * Improve the !help command to also explain all the other possible commands this bot responds to.
 * Add status referring to !help command
 * Add !github command to link to the bot's Github repo
+* Add !request command to queue up to 5 photos to be posted in the following days
 
 ## Status
 
