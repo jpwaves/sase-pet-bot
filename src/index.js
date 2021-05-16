@@ -96,11 +96,13 @@ client.on('message', async message => {
             ]
         }
 
-        // determines where to send response to !sample command
+        // Determines where to send response to !sample command
         if (message.channel.type == 'dm') {
             message.author.send({ embed: msgEmbed });
-        } else {
+        } else if (message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
             client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ embed: msgEmbed });
+        } else {
+            // We don't want the bot to respond when a command is given in the wrong text channel.
         }
     }
 });
@@ -109,7 +111,7 @@ client.on('message', async message => {
  * Takes in any issues or suggestions for the bot
  */
 client.on('message', async message => {
-    if (message.content.startsWith('!report')) {
+    if (message.content.startsWith('!report') && message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
         client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send('Please DM me (Justin Poggers/waves#4196) about any issues, bugs, or suggestions regarding the Pet Bot.');
     }
 });
@@ -126,15 +128,19 @@ client.on('message', async message => {
             const msg = 'To upload a new pet image, private message this bot !upload to start the upload process. When uploading an image file, you must include parameters for the pet name and a message description in the following format:\n !upload [pet name] | [description]\n If you don\'t want to include pet name or a message as part of the upload, put "N/A" in for the parameter you don\'t want to include. For examples, use the !help command.';
             message.author.send(msg);
         } else if (message.content.startsWith('!upload') && message.channel.type == 'dm') {
+            // checks to make sure a file was uploaded
             if (message.attachments.size !== 1) {
                 message.author.send('Missing image file/can only upload 1 image per upload operation');
             } else {
+                // extracting the attached file and arguments
                 const iter = message.attachments.values();
                 const messageFile = iter.next().value;
     
                 const content = message.content.slice(7, message.content.length);
                 const args = content.split('|').map(arg => arg.trim()).filter(arg => arg !== '');
                 console.log(args);
+
+                // checks that required parameters are present
                 if (args.length !== 2) {
                     message.author.send('Missing either pet name or description input parameters. If you don\'t want to include a pet name or description, set the input parameter to "N/A". For examples, use the !help command.');
                 } else {
@@ -145,6 +151,8 @@ client.on('message', async message => {
                         // TODO: convert download to return a read stream that can be piped directly into s3upload
                         // see https://stackoverflow.com/questions/14544911/fs-createreadstream-equivalent-for-remote-file-in-node
                         // for a possible starting point on how to do this
+
+                        // begin download and upload process
                         console.log('starting download');
                         download(messageFile.url, generateFilePath('./downloads/'), async () => {
                             console.log('download complete');
