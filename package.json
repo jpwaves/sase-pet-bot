@@ -1,6 +1,6 @@
 {
   "name": "sase-pet-bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "College is a stressful. At 7AM every day, get your daily dose of serotonin when this bot posts a photo of a SASE member's pet and feel slightly better about your day. Who doesn't love pets?",
   "main": "index.js",
   "scripts": {

@@ -72,6 +72,7 @@ To-do list:
 ## Status
 
 Project is: _finished_ but is still being worked on for future updates.
+Most recent version: 1.0.1
 
 ## Inspiration
 
