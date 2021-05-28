@@ -82,9 +82,9 @@ client.on('ready', () => {
  * Provides sample examples of how to use the !upload command
  */
 client.on('message', async message => {
-    if (message.content.trim() === '!help') {
+    if (message.content.trim() === '!eg') {
         const msgEmbed = {
-            title: 'Sample uses of !upload',
+            title: 'Example uses of !upload command:',
             fields: [
                 {
                     name: 'Includes a given pet name and message',
