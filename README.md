@@ -62,12 +62,13 @@ To-do list:
 
 * Improve functionality of the !report command to allow users to submit any bug or issues regarding the bot and have them stored in a database for me or any future developers on this project to look at and address.
 * Let users edit their submissions of their pet photos (only the optional parameters) after already submitting to the database.
-* Look into possibility of rewriting the code with an object-oriented style.
+* Look into possibility of rewriting the code with an object-oriented style (use MVC Design).
 * Improve visuals of the Discord embed messages posted (for both the daily pet photo post as well as what is displayed from all the commands).
 * Improve the !help command to also explain all the other possible commands this bot responds to.
 * Add status referring to !help command
 * Add !github command to link to the bot's Github repo
 * Add !request command to queue up to 5 photos to be posted in the following days
+* Add photo security to ensure that uploaded photos are actually pet photos.
 
 ## Status
 
