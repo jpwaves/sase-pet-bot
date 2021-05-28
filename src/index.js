@@ -53,6 +53,11 @@ const prevalidateData = async () => {
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
+    // Sets the status to tell users that !help is an available command for getting the total list of commands.
+    client.user.setActivity('Type !help for list of commands', { type: 'LISTENING' })
+    .then(presence => console.log(`Activity set to ${presence.activities[0].name}`))
+    .catch(console.error);
+
     // Makes sure that postDailyPetEmbedMessage can find an Discord embed to post
     prevalidateData();
 
