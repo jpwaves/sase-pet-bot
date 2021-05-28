@@ -65,7 +65,6 @@ To-do list:
 * Look into possibility of rewriting the code with an object-oriented style (use MVC Design).
 * Improve visuals of the Discord embed messages posted (for both the daily pet photo post as well as what is displayed from all the commands).
 * Improve the !help command to also explain all the other possible commands this bot responds to.
-* Add status referring to !help command
 * Add !github command to link to the bot's Github repo
 * Add !request command to queue up to 5 photos to be posted in the following days
 * Add photo security to ensure that uploaded photos are actually pet photos.
@@ -73,7 +72,7 @@ To-do list:
 ## Status
 
 Project is: _finished_ but is still being worked on for future updates.
-Most recent version: 1.0.1
+Most recent version: 1.1.0
 
 ## Inspiration
 
