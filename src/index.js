@@ -267,11 +267,13 @@ client.on('message', async message => {
                             .catch(error => {
                                 console.log('Error occurred during dynamodb upload process');
                                 console.log(error);
+                                logError('Error occurred during dynamodb upload process\n' + error);
                             });
                         });
                     } catch(error) {
                         console.log(error);
                         message.author.send('Upload failed. Check logs for more details.');
+                        logError('Upload failed.\n' + error);
                     }
                 }
                 
@@ -279,6 +281,7 @@ client.on('message', async message => {
         }
     } catch(error) {
         console.log(error);
+        logError('Something broke oof.\n' + error);
     }
 });
 
@@ -324,6 +327,7 @@ const postDailyPetEmbedMessage = async () => {
     } catch(error) {
         console.log('Errored during posting');
         console.log(error);
+        console.log('Errored during posting\n' + error);
     }
 }
 
