@@ -18,6 +18,9 @@ import {
 import { 
     RecurrenceRule, 
     scheduleJob } from 'node-schedule';
+import {
+    createWriteStream
+} from 'fs';
 
 // construct Discord client for bot
 const client = new Client();
@@ -48,6 +51,21 @@ const prevalidateData = async () => {
         await resetData();
     }
 } 
+
+/**
+ * Logs any errors that occur to the error_log text file.
+ * @param {String} errorMsg Error message from method
+ */
+const logError = async (errorMsg) => {
+    const stream = createWriteStream('error_log.txt', 
+    { 
+        'flags': 'a' 
+    });
+
+    const timeOfError = new Date();
+    stream.write(`Error occurred at: ${timeOfError}\nError Message:\n${errorMsg}\n\n`);
+    stream.end();
+};
 
 // Upon startup, begin scheduled job for posting images
 client.on('ready', () => {
@@ -193,6 +211,7 @@ client.on('message', async message => {
         if (message.content.startsWith('!upload') && message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
             // redirecting user to private message !upload to begin upload process
             console.log('Cannot upload in public text channel');
+            logError('Cannot upload in public text channel');
             message.delete({ reason: 'Cannot upload in public text channel' });
             const msg = 'To upload a new pet image, private message this bot !upload to start the upload process. When uploading an image file, you must include parameters for the pet name and a message description in the following format:\n !upload [pet name] | [description]\n If you don\'t want to include pet name or a message as part of the upload, put "N/A" in for the parameter you don\'t want to include. For examples, use the !eg command.';
             message.author.send(msg);
