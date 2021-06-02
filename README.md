@@ -66,6 +66,7 @@ To-do list:
 * Improve visuals of the Discord embed messages posted (for both the daily pet photo post as well as what is displayed from all the commands).
 * Add !request command to queue up to 5 photos to be posted in the following days
 * Add photo security to ensure that uploaded photos are actually pet photos.
+* Output any errors to a text file rather than print to console.
 
 ## Status
 
