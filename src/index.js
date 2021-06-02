@@ -121,9 +121,17 @@ client.on('message', async message => {
 
         // Determines where to send response to !eg command
         if (message.channel.type == 'dm') {
-            message.author.send({ embed: msgEmbed });
+            message.author.send({ embed: msgEmbed })
+            .catch(error => {
+                console.log(error);
+                logError('Error occurred in !eg command: ' + error);
+            });
         } else if (message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
-            client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ embed: msgEmbed });
+            client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ embed: msgEmbed })
+            .catch(error => {
+                console.log(error);
+                logError('Error occurred in !eg command: ' + error);
+            });
         } else {
             // We don't want the bot to respond when a command is given in the wrong text channel.
         }
@@ -142,9 +150,17 @@ client.on('message', async message => {
 
         // Determines where to send response to !github command
         if (message.channel.type == 'dm') {
-            message.author.send({ embed: msgEmbed });
+            message.author.send({ embed: msgEmbed })
+            .catch(error => {
+                console.log(error);
+                logError('Error occurred in !github command: ' + error);
+            });
         } else if (message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
-            client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ embed: msgEmbed });
+            client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ embed: msgEmbed })
+            .catch(error => {
+                console.log(error);
+                logError('Error occurred in !github command: ' + error);
+            });
         } else {
             // We don't want the bot to respond when a command is given in the wrong text channel.
         }
@@ -185,9 +201,17 @@ client.on('message', async message => {
 
         // Determines where to send response to !help command
         if (message.channel.type == 'dm') {
-            message.author.send({ embed: msgEmbed });
+            message.author.send({ embed: msgEmbed })
+            .catch(error => {
+                console.log(error);
+                logError('Error occurred in !help command: ' + error);
+            });
         } else if (message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
-            client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ embed: msgEmbed });
+            client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ embed: msgEmbed })
+            .catch(error => {
+                console.log(error);
+                logError('Error occurred in !help command: ' + error);
+            });
         } else {
             // We don't want the bot to respond when a command is given in the wrong text channel.
         }
@@ -210,11 +234,13 @@ client.on('message', async message => {
  */
 client.on('message', async message => {
     if (message.content.startsWith('!report') && message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
-        client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send('Please DM me (Justin Poggers/waves#4196) about any issues, bugs, or suggestions regarding the Pet Bot.');
+        client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send('Please DM me (Justin Poggers/waves#4196) about any issues, bugs, or suggestions regarding the Pet Bot.')
+        .catch(error => {
+            console.log(error);
+            logError('Error occurred in !report command: ' + error);
+        });
     }
 });
-
-
 
 /**
  * Handles event where users try to upload an image that bot can post later on.
