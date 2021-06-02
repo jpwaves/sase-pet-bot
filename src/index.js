@@ -140,7 +140,7 @@ client.on('message', async message => {
             url: 'https://github.com/jpwaves/sase-pet-bot'
         }
 
-        // Determines where to send response to !eg command
+        // Determines where to send response to !github command
         if (message.channel.type == 'dm') {
             message.author.send({ embed: msgEmbed });
         } else if (message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
@@ -183,7 +183,7 @@ client.on('message', async message => {
             ]
         }
 
-        // Determines where to send response to !eg command
+        // Determines where to send response to !help command
         if (message.channel.type == 'dm') {
             message.author.send({ embed: msgEmbed });
         } else if (message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
@@ -195,6 +195,17 @@ client.on('message', async message => {
 });
 
 /**
+ * Forces bot to make one random pet photo post. Only the designated administrator of the bot can execute this command.
+ */
+ client.on('message', async message => {
+    if (message.content.startsWith('!post') &&
+     message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID && 
+     message.author.tag == process.env.ADMIN_ID) {
+        postDailyPetEmbedMessage();
+    }
+});
+
+/**
  * Takes in any issues or suggestions for the bot
  */
 client.on('message', async message => {
@@ -202,6 +213,8 @@ client.on('message', async message => {
         client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send('Please DM me (Justin Poggers/waves#4196) about any issues, bugs, or suggestions regarding the Pet Bot.');
     }
 });
+
+
 
 /**
  * Handles event where users try to upload an image that bot can post later on.
