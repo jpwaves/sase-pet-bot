@@ -87,7 +87,7 @@ client.on('message', async message => {
             title: 'Example uses of !upload command:',
             fields: [
                 {
-                    name: 'Includes a given pet name and message',
+                    name: 'Pet name and message',
                     value: '!upload Marshmellow | My little wittle cutie pie <3'
                 },
                 {
@@ -101,7 +101,71 @@ client.on('message', async message => {
             ]
         }
 
-        // Determines where to send response to !sample command
+        // Determines where to send response to !eg command
+        if (message.channel.type == 'dm') {
+            message.author.send({ embed: msgEmbed });
+        } else if (message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
+            client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ embed: msgEmbed });
+        } else {
+            // We don't want the bot to respond when a command is given in the wrong text channel.
+        }
+    }
+});
+
+/**
+ * Lists all available commands for the bot.
+ */
+ client.on('message', async message => {
+    if (message.content.trim() === '!github') {
+        const msgEmbed = {
+            title: 'Click here to go to the GitHub repository for this bot!',
+            url: 'https://github.com/jpwaves/sase-pet-bot'
+        }
+
+        // Determines where to send response to !eg command
+        if (message.channel.type == 'dm') {
+            message.author.send({ embed: msgEmbed });
+        } else if (message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
+            client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ embed: msgEmbed });
+        } else {
+            // We don't want the bot to respond when a command is given in the wrong text channel.
+        }
+    }
+});
+
+/**
+ * Lists all available commands for the bot.
+ */
+client.on('message', async message => {
+    if (message.content.trim() === '!help') {
+        const msgEmbed = {
+            title: 'List of Commands',
+            // alphabetize this list and complete it
+            fields: [
+                {
+                    name: '!upload [insert-pet-name] | [insert-message]',
+                    value: 'Use this command in conjuction with an attachment upload to add a pet photo to the bot.'
+                },
+                {
+                    name: '!eg',
+                    value: 'Example uses of the !upload command.'
+                },
+                {
+                    name: '!github',
+                    value: 'Links the page for the bot\'s GitHub repository.'
+                },
+                {
+                    name: '!help',
+                    value: 'Displays a list of commands for this bot.'
+                },
+                {
+                    name: '!report',
+                    value: 'Report an issue with the bot to the developer.'
+                }
+            ]
+        }
+
+        // Determines where to send response to !eg command
         if (message.channel.type == 'dm') {
             message.author.send({ embed: msgEmbed });
         } else if (message.channel.id == process.env.DISCORD_TARGET_TEXT_CHANNEL_ID) {
