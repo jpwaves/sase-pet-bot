@@ -194,7 +194,7 @@ client.on('message', async message => {
             // redirecting user to private message !upload to begin upload process
             console.log('Cannot upload in public text channel');
             message.delete({ reason: 'Cannot upload in public text channel' });
-            const msg = 'To upload a new pet image, private message this bot !upload to start the upload process. When uploading an image file, you must include parameters for the pet name and a message description in the following format:\n !upload [pet name] | [description]\n If you don\'t want to include pet name or a message as part of the upload, put "N/A" in for the parameter you don\'t want to include. For examples, use the !help command.';
+            const msg = 'To upload a new pet image, private message this bot !upload to start the upload process. When uploading an image file, you must include parameters for the pet name and a message description in the following format:\n !upload [pet name] | [description]\n If you don\'t want to include pet name or a message as part of the upload, put "N/A" in for the parameter you don\'t want to include. For examples, use the !eg command.';
             message.author.send(msg);
         } else if (message.content.startsWith('!upload') && message.channel.type == 'dm') {
             // checks to make sure a file was uploaded
