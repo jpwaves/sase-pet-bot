@@ -31,14 +31,25 @@ const client = new Client();
  * @param {Object} discordEmbed Object containing parameters for creating a Discord message embed
  */
 const addOptionalParams = (embedData, discordEmbed) => {
-    // sets title of embed to pet name if a pet name is given in the returned data
-    if (embedData.petName.S != 'N/A') {
-        discordEmbed.title = embedData.petName.S;
-    }
+    // Sets the field to the name and description if both are available. If both aren't
+    // available, sets the description to the one that is available.
+    if (embedData.petName.S != 'N/A' && embedData.description.S != 'N/A') {
+        discordEmbed.fields = [
+            {
+                name: embedData.petName.S,
+                value: `_${embedData.description.S}_`,
+            }
+        ];
+    } else {
+        // sets description of embed to pet name if a pet name exists (bolded)
+        if (embedData.petName.S != 'N/A') {
+            discordEmbed.description = `**${embedData.petName.S}**`;
+        }
 
-    // sets description of embed to description if a description is given in the returned data
-    if (embedData.description.S != 'N/A') {
-        discordEmbed.description = embedData.description.S;
+        // sets description of embed to description if a description exists (italicized)
+        if (embedData.description.S != 'N/A') {
+            discordEmbed.description = `_${embedData.description.S}_`;
+        }
     }
 };
 
@@ -355,6 +366,8 @@ const postDailyPetEmbedMessage = async () => {
         const imageLink = `attachment://${embedData.embedId.S}`;
         const imageFile = new MessageAttachment(filestream, embedData.embedId.S);
         const msgEmbed = {
+            color: 0xffd956,
+            title: '🥺 🥰  Daily Dose of Pets  🥰 🥺',
             image: {
                 url: imageLink,
             },
