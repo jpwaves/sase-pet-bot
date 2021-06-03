@@ -185,12 +185,7 @@ client.on('message', async message => {
     if (message.content.trim() === '!help') {
         const msgEmbed = {
             title: 'List of Commands',
-            // alphabetize this list and complete it
             fields: [
-                {
-                    name: '!upload [insert-pet-name] | [insert-message]',
-                    value: 'Use this command in conjuction with an attachment upload to add a pet photo to the bot.'
-                },
                 {
                     name: '!eg',
                     value: 'Example uses of the !upload command.'
@@ -206,7 +201,11 @@ client.on('message', async message => {
                 {
                     name: '!report',
                     value: 'Report an issue with the bot to the developer.'
-                }
+                },
+                {
+                    name: '!upload [insert-pet-name] | [insert-message]',
+                    value: 'Use this command in conjuction with an attachment upload to add a pet photo to the bot.'
+                },
             ]
         }
 
@@ -371,7 +370,6 @@ const postDailyPetEmbedMessage = async () => {
             image: {
                 url: imageLink,
             },
-            author: embedData.uploaderId.S
         };
         addOptionalParams(embedData, msgEmbed);
         client.channels.cache.get(process.env.DISCORD_TARGET_TEXT_CHANNEL_ID).send({ files: [imageFile], embed: msgEmbed });
