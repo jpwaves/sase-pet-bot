@@ -66,6 +66,9 @@ To-do list:
 * Improve visuals of the Discord embed messages posted (for both the daily pet photo post as well as what is displayed from all the commands).
 * Add !request command to queue up to 5 photos to be posted in the following days
 * Add photo security to ensure that uploaded photos are actually pet photos.
+* Use ML Computer vision to classify pets to specific categories to determine which emojis to wrap pet names in.
+* Normalize the images attached to the embeds to be the same size (or close to the same size) for each post.
+* Add support for videos
 
 ## Status
 
